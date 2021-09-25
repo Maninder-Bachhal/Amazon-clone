@@ -3,10 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import reducer,{initialState} from './reducer';
+import { StateProvider } from './StateProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* initialstate means basket is empty and reducer means to push into data layer  */}
+   <StateProvider initialState={initialState} reducer={reducer}>
+      <App />
+    </StateProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
