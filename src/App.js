@@ -14,7 +14,7 @@ function App() {
           <Route path="/checkout">
             <Checkout/>
           </Route>
-          {/* This is default route.Make sure its always written at end. */}
+          {/* This is default route.Make sure its always written all these at end . */}
           <Route path="/">
             <Home />
           </Route>
