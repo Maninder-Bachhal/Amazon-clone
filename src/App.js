@@ -1,12 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import './App.css';
 import Header from "./Header";
 import Home from "./Home";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Checkout from "./Checkout";
 import Login from "./Login";
-
+import { auth } from "./firebase";
+import { useStateValue } from "./StateProvider";
 function App() {
+  const [{}, dispatch] = useStateValue();
+
+  useEffect(() => {
+    // will only run once when the app component loads...
+    //when someone create or signin it will be redirected to this page and this will run.
+    auth.onAuthStateChanged((authUser) => {
+      console.log("THE USER IS >>> ", authUser);
+
+      if (authUser) {
+        // the user just logged in / the user was logged in and just reloded it.
+        //Add this user
+        //This dispatch an object to data layer
+        dispatch({
+          type: "SET_USER",
+          user: authUser,
+        });
+      } else {
+        // the user is logged out
+        //Remove this user
+        dispatch({
+          type: "SET_USER",
+          user: null,
+        });
+      }
+    });
+  }, []);
   return (
     <Router>
       <div className="app">
@@ -15,12 +42,12 @@ function App() {
             <h1><Login /></h1>
           </Route>
           <Route path="/checkout">
-            <Header/>
+            <Header />
             <Checkout />
           </Route>
           {/* This is default route.Make sure its always written all these at end . */}
           <Route path="/">
-            <Header/>
+            <Header />
             <Home />
           </Route>
         </Switch>
