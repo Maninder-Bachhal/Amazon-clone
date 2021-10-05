@@ -3,9 +3,13 @@ import './Subtotal.css';
 import CurrencyFormat from "react-currency-format";
 import { useStateValue } from './StateProvider';
 import { getBasketTotal } from './reducer';
+import { useHistory } from 'react-router';
 // we can put getBasketTotal inside this but its good practice to put selectors inside reducer
 function Subtotal() {
+    const history=useHistory();
     const [{ basket }, dispatch] = useStateValue();
+
+
     return (
         <div className="subtotal">
             <CurrencyFormat
@@ -26,7 +30,8 @@ function Subtotal() {
                 thousandSeparator={true}
                 prefix={"$"}
             />
-            <button>Proceed to checkout</button>
+            <button onClick={e=>history.push('/payment')}>Proceed to checkout</button>
+            {/* we used history .It will push the payment page into stack and moreover we want it to be like button not link. */}
         </div>
     )
 }
