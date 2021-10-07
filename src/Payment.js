@@ -10,6 +10,8 @@ import axios from './axios';
 function Payment() {
 
     const [{ basket, user }, dispatch] = useStateValue();
+    const history = useHistory();
+
     // Two Hooks
     const stripe = useStripe();
     const elements = useElements();
@@ -26,10 +28,11 @@ function Payment() {
         //whenever basket changes i.e some ele. is removed then change the secret.
         //Axios is to make requests.
         const getClientSecret = async () => {
-            const response = await axios ({
+            const response = await axios({
                 method: 'post',
                 // Stripe expects the total in a currencies subunits
                 //*100 to convert cents to $.
+                //api call by axios
                 url: `/payments/create?total=${getBasketTotal(basket) * 100}`
             });
             setClientSecret(response.data.clientSecret)
@@ -38,8 +41,7 @@ function Payment() {
         getClientSecret();
     }, [basket])
 
-    const handleSubmit = e => {
-        // do all the fancy stripe stuff...
+    const handleSubmit = async (event) => {
         event.preventDefault();
         setProcessing(true);
 
@@ -50,15 +52,14 @@ function Payment() {
         }).then(({ paymentIntent }) => {
             // paymentIntent = payment confirmation
 
+            
+
             setSucceeded(true);
             setError(null)
             setProcessing(false)
 
-            // dispatch({
-            //     type: 'EMPTY_BASKET'
-            // })
-
             history.replace('/orders')
+            
         })
 
     }
@@ -113,27 +114,27 @@ function Payment() {
                         <h3>Payment Method</h3>
                     </div>
                     <div className="payment__details">
-                            {/* Stripe magic will go */}
+                        {/* Stripe magic will go */}
 
-                            <form onSubmit={handleSubmit} >
-                                <CardElement onChange={handleChange} />
-                                <div className='payment__priceContainer'>
-                                    <CurrencyFormat
-                                        renderText={(value) => (
-                                            <h3>Order Total: {value}</h3>
-                                        )}
-                                        decimalScale={2}
-                                        value={getBasketTotal(basket)}
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                        prefix={"$"}
-                                    />
-                                    <button disabled={processing || disabled || succeeded}>
-                                        <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
-                                    </button>
-                                </div>
-                                {/* {error && <div>{error}</div>} */}
-                            </form>
+                        <form onSubmit={handleSubmit} >
+                            <CardElement onChange={handleChange} />
+                            <div className='payment__priceContainer'>
+                                <CurrencyFormat
+                                    renderText={(value) => (
+                                        <h3>Order Total: {value}</h3>
+                                    )}
+                                    decimalScale={2}
+                                    value={getBasketTotal(basket)}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    prefix={"$"}
+                                />
+                                <button disabled={processing || disabled || succeeded}>
+                                    <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                                </button>
+                            </div>
+                            {/* {error && <div>{error}</div>} */}
+                        </form>
                     </div>
                 </div>
             </div>
