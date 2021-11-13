@@ -44,3 +44,4 @@ exports.api = functions.https.onRequest(app);
 //Example endpoint
 // we can run this by clicking on it.
 // http://localhost:5001/challenge-7a130/us-central1/api
+// http://localhost:5001/challenge-7a130/us-central1/api

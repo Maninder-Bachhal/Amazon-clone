@@ -10,15 +10,16 @@ import { useStateValue } from "./StateProvider";
 import Payment from "./Payment";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-
+import Order from "./Order";
 const promise = loadStripe(
   "pk_test_51Jhf5PSIjT45MCbFUWDVnWgAxlAYxqlhaaj7gtsmn1lYu9UIDFIzzidNdA0ow6RpcM2U7KSQwZvcN8Csv6ejkOuy001pzVmyuz"
 );
 
 function App() {
-  const [{}, dispatch] = useStateValue();
+  const [{ }, dispatch] = useStateValue();
 
   useEffect(() => {
+    //it is like a listner
     // will only run once when the app component loads...
     //when someone create or signin it will be redirected to this page and this will run.
     auth.onAuthStateChanged((authUser) => {
@@ -46,8 +47,11 @@ function App() {
     <Router>
       <div className="app">
         <Switch>
+          <Route path="/orders">
+            <Order />
+          </Route>
           <Route path="/login">
-            <h1><Login /></h1>
+            <Login />
           </Route>
           <Route path="/checkout">
             <Header />

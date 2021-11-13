@@ -7,32 +7,27 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CurrencyFormat from "react-currency-format";
 import { getBasketTotal } from "./reducer";
 import axios from './axios';
-import { db } from "./firebase";
+// import { db } from "./firebase";
 
 function Payment() {
     const [{ basket, user }, dispatch] = useStateValue();
     const history = useHistory();
-    // Two Hooks
+
     const stripe = useStripe();
     const elements = useElements();
 
     const [succeeded, setSucceeded] = useState(false);
     const [processing, setProcessing] = useState("");
-
-    const [error, setError] = useState(null);//For error
-    const [disabled, setDisabled] = useState(true);//To disable the state
-    const [clientSecret, setClientSecret] = useState(true);//To fetch clientsecret from stripe.
+    const [error, setError] = useState(null);
+    const [disabled, setDisabled] = useState(true);
+    const [clientSecret, setClientSecret] = useState(true);
 
     useEffect(() => {
         // generate the special stripe secret which allows us to charge a customer
-        //whenever basket changes i.e some ele. is removed then change the secret.
-        //Axios is to make requests.
         const getClientSecret = async () => {
             const response = await axios({
                 method: 'post',
                 // Stripe expects the total in a currencies subunits
-                //*100 to convert cents to $.
-                //api call by axios
                 url: `/payments/create?total=${getBasketTotal(basket) * 100}`
             });
             setClientSecret(response.data.clientSecret)
@@ -48,7 +43,7 @@ function Payment() {
         // do all the fancy stripe stuff...
         event.preventDefault();
         setProcessing(true);
-
+ 
         const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement)

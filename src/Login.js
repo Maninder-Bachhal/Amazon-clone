@@ -84,7 +84,7 @@ function Login() {
     }
 
     const register = e => {
-        e.preventDefault();
+        e.preventDefault(); 
         auth
             .createUserWithEmailAndPassword(email, password)
             .then((auth) => {
